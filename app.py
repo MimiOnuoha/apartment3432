@@ -6,6 +6,14 @@ from unidecode import unidecode
 from flask import Flask, request, render_template, redirect, abort, jsonify
 import requests
 
+# import all of mongoengine
+# from mongoengine import *
+#from flask.ext.mongoengine import mongoengine
+
+
+# import data models
+import models
+
 # Twilio
 from twilio.rest import TwilioRestClient
 
@@ -13,58 +21,78 @@ from twilio.rest import TwilioRestClient
 app = Flask(__name__)   # create our flask app
 
 
+# --------- Database Connection ---------
+# MongoDB connection to MongoLab's database
+mongoengine.connect('mydata', host=os.environ.get('MONGOLAB_URI'))
+app.logger.debug("Connecting to MongoLabs")
+
+
+
+people = {"mimi": 12817340266, "roomietwo": 12345678900, 
+"roomiethree": 23456789011, "roomiefour": 34567891234}
+
+choreList = ['Kitchen','Bathroom', 'Floors','Misc']
+
+
 # --------- Routes ----------
 @app.route('/')
 def main():
 	return render_template('index.html')
 
-@app.route("/fsq", methods=['GET','POST'])
-def fsqdemo():
-	if request.method == "GET":
-		return render_template('fsq.html')
 
-	elif request.method == "POST":
+@app.route('/setupdb')
+def db():
 
-		user_latlng = request.form.get('user_latlng')
+	tmpRoomie = models.Roommate()
+	tmpRoomie.name = "mimi"
+	tmpRoomie.chorenumber = 1
+	tmpRoomie.save()
 
-		# Foursquare API endpoint for Venues
-		fsq_url = "https://api.foursquare.com/v2/venues/search"
+	tmpRoomie = models.Roommate()
+	tmpRoomie.name = "roomietwo"
+	tmpRoomie.chorenumber = 2
+	tmpRoomie.save()
 
-		# prepare the foursquare query parameters for the Venues Search request
-		# simple example includes lat,long search
-		# we pass in our client id and secret along with 'v', a version date of API.
-		fsq_query = {
-			'll' : user_latlng,
-			'client_id' : os.environ.get('FOURSQUARE_CLIENT_ID'), # info from foursquare developer setting, placed inside .env
-			'client_secret' : os.environ.get('FOURSQUARE_CLIENT_SECRET'),
-			'v' : '20121113' # YYYYMMDD
-		}
+	tmpRoomie = models.Roommate()
+	tmpRoomie.name = "roomiethree"
+	tmpRoomie.chorenumber = 3
+	tmpRoomie.save()
 
-		# using Requests library, make a GET request to the fsq_url
-		# pass in the fsq_query dictionary as 'params', this will build the full URL with encoding variables.
-		results = requests.get(fsq_url, params=fsq_query)
+	tmpRoomie = models.Roommate()
+	tmpRoomie.name = "roomiefour"
+	tmpRoomie.chorenumber = 4
+	tmpRoomie.save()
 
-		# log out the url that was request
-		app.logger.info("Requested url : %s" % results.url)
+	return "create them"
 
-		# if we receive a 200 HTTP status code, great! 
-		if results.status_code == 200:
+@app.route('/updatechores')
+def chores():
 
-			# get the response, venue array 
-			fsq_response = results.json # .json returns a python dictonary to us.
-			nearby_venues = fsq_response['response']['venues']
+	# get all roomies
+	roommates = models.Roommate.object()
 
-			app.logger.info('nearby venues')
-			app.logger.info(nearby_venues)
+	# loop all roomies + increment chore number
+	for r in rommates:
+		#increment chorenumber
 
-			# Return raw json for demonstration purposes. 
-			# You would likely use this data in your templates or database in a real app
-			return jsonify(results.json['response'])
-	
+		# get the new chore name
+		if r.chorenumber == len(choreList)-1:
+			r.chorenumber = 0   # choreList[0]  or  choreList[r.chorenumber]
 		else:
+			r.chorenumber += 1
 
-			# Foursquare API request failed somehow
-			return "uhoh, something went wrong %s" % results.json
+
+		# save r
+		# r.save()
+
+		# send sms
+
+
+
+
+
+
+	# 
 
 
 @app.route('/twilio', methods=['GET','POST'])
@@ -77,15 +105,16 @@ def twilio():
 
 		telephone = request.form.get('telephone')
 		sms_text = request.form.get('sms_text')
+		person = request.form.get ('person_text')
 
 		# prepare telephone number. regex, only numbers
-		telephone_num = re.sub("\D", "", telephone)
-		if len(telephone_num) != 11:
-			return "your target phone number must be 11 digits. go back and try again."
-		else:
-			to_number = "+" + str(telephone_num) #US country only now
+		##telephone_num = re.sub("\D", "", telephone)
+		##if len(telephone_num) != 11:
+		##	return "Your target phone number must be 11 digits. Try again."
+		##else:
+		to_number = "+" + str(12817340266) #US country only now
 
-
+		
 		# trim message to 120
 		if len(sms_text) > 120:
 			sms_text = sms_text[0:119]
@@ -98,45 +127,12 @@ def twilio():
 		from_telephone = os.environ.get('TWILIO_PHONE_NUMBER') # format +19171234567
 
 		message = client.sms.messages.create(to=to_number, from_=from_telephone,
-	                                     body="DWD DEMO: " + sms_text)
+	                                     body="Chore Reminder: " + sms_text)
 
 		return "message '%s' sent" % sms_text
 
 
-# mailgun api example
-@app.route('/mailgun', methods=['GET','POST'])
-def mailgun():
 
-
-	if request.method == "GET":
-		return render_template('mailgun.html')
-
-	elif request.method == "POST":
-
-		# prepare email data for mailgun
-		email_data = {
-			'to' : request.form.get('receipient'),
-			'from' : request.form.get('sender'),
-			'subject' : request.form.get('subject'),
-			'text' : request.form.get('message')
-		}
-
-		# build the mailgun url
-		# we build the url with the MAILGUN_DOMAIN
-		mailgun_url = "https://api.mailgun.net/v2/%s/messages" % os.environ.get('MAILGUN_DOMAIN')
-		result = requests.post(mailgun_url, 
-							auth=('api',os.environ.get('MAILGUN_API_KEY')),
-							data=email_data)
-
-		# response to user
-		if result.status_code == 200:
-			return "Your email has been sent"
-
-		else:
-			app.logger.error(result.text)
-			return "Something went wrong and email might not have been sent."
-		
-		return str(result.status_code)
 
 @app.errorhandler(404)
 def page_not_found(error):

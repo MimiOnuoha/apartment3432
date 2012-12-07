@@ -33,6 +33,7 @@ audio:not([controls]) {
   display: none;
 }
 
+
 html {
   font-size: 100%;
   -webkit-text-size-adjust: 100%;
@@ -159,7 +160,7 @@ textarea {
 
 body {
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Playfair Dislay SC", sans-serif;
   font-size: 14px;
   line-height: 20px;
   color: #333333;

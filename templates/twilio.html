@@ -4,7 +4,7 @@
 {% block body %}
 
 
-<h2>Twilio example, form to sms</h2>
+<!--<h2>Twilio example, form to sms</h2>
 <form method="POST">
 	<label>Send a txt msg. Be nice.</label>
 	<br>
@@ -14,37 +14,74 @@
 	<label for="sms_text">SMS Message</label>
 	<input type="text" id="sms_text" name="sms_text"><br>
 	<input type="submit" class="btn" value="send it">
+</form>-->
+
+
+<table border="0" cellpadding="15">
+<tr>
+	<td>
+<form method="POST">
+	<label for="sms_text">Mimi's chore this week is to </label>
+	<input type="text" id="sms_text" name="sms_text">
+	<input type="submit" class="btn" value="Send her a reminder">
+	<br>
 </form>
+</td>
+</tr>
+
+<tr>
+<td>
+<form method="POST">
+	<label for="sms_text">J's chore this week is to </label>
+	<input type="text" id="sms_text" name="sms_text">
+	<input type="submit" class="btn" value="Send her a reminder">
+	<br>
+</form>
+</td>
+</tr>
+
+<tr>
+<td>
+<form method="POST">
+	<label for="sms_text">C's chore this week is to </label>
+	<input type="text" id="sms_text" name="sms_text">
+	<input type="submit" class="btn" value="Send him a reminder">
+	<br>
+</form>
+</td>
+</tr>
+
+<tr>
+<td>
+<form method="POST">
+	<label for="sms_text">R's chore this week is to </label>
+	<input type="text" id="sms_text" name="sms_text">
+	<input type="submit" class="btn" value="Send him a reminder">
+	<br>
+</form>
+</td>
+<tr>
+</table>
+
+
+
+
 
 <hr>
 
 
-<h3 id="getting-twilio-account">Getting Twilio Account</h3>
+<h3 id="getting-twilio-account">THE CHORES</h3>
 
 <ul>
-<li>Register <a href="https://www.twilio.com/try-twilio">https://www.twilio.com/try-twilio</a>.</li>
-<li>Verify phone number with access code.</li>
-<li>Pick a phone number.</li>
-<li>Poke around all their API endpoints, make and receive calls, make and receive SMS.</li>
+<li>KITCHEN: 
+<li>BATHROOM: </li>
+<li>FLOORS: </li>
+<li>MISCELLANEOUS: </li>
 </ul>
 
-<p>When you are registered locate your your Account SID and Auth Token here,<a href="https://www.twilio.com/user/account">https://www.twilio.com/user/account</a> and add them to your .env file</p>
 
-<p><strong>.env</strong>    </p>
+<p> Include a chart here that shows the chores and what they entail </p>
 
-<pre><code>TWILIO_ACCOUNT_SID=xxxxxxxxxxxxxx
-TWILIO_AUTH_TOKEN=xxxxxxxxx
-TWILIO_PHONE_NUMBER=+1xxxxxxxxx
-</code></pre>
-
-<p>Now let's add the Twilio account variables to Heroku.</p>
-
-<p><strong>In your code directory in Terminal run,</strong></p>
-
-<pre><code>heroku config:add TWILIO_ACCOUNT_SID=xxxxxxxxxxxxxx
-heroku config:add TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxx
-heroku config:add TWILIO_PHONE_NUMBER=+1xxxxxxxxx
-</code></pre>
 {% endblock %}
 
 
