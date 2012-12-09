@@ -12,7 +12,7 @@ from flask.ext.mongoengine import mongoengine
 
 
 # import data models
-import models
+#import models
 
 # Twilio
 from twilio.rest import TwilioRestClient
@@ -43,22 +43,24 @@ def main():
 @app.route('/setupdb')
 def db():
 
-	tmpRoomie = models.Roommate()
+	#tmpRoomie=models.Roommate() 
+
+	tmpRoomie = models.RoommateOne()
 	tmpRoomie.name = "mimi"
 	tmpRoomie.chorenumber = 1
 	tmpRoomie.save()
 
-	tmpRoomie = models.Roommate()
+	tmpRoomie = models.RoommateTwo()
 	tmpRoomie.name = "roomietwo"
 	tmpRoomie.chorenumber = 2
 	tmpRoomie.save()
 
-	tmpRoomie = models.Roommate()
+	tmpRoomie = models.RoommateThree()
 	tmpRoomie.name = "roomiethree"
 	tmpRoomie.chorenumber = 3
 	tmpRoomie.save()
 
-	tmpRoomie = models.Roommate()
+	tmpRoomie = models.RoommateFour()
 	tmpRoomie.name = "roomiefour"
 	tmpRoomie.chorenumber = 4
 	tmpRoomie.save()
@@ -72,7 +74,7 @@ def chores():
 	roommates = models.Roommate.object()
 
 	# loop all roomies + increment chore number
-	for r in roomates:
+	for r in roommates:
 		#increment chorenumber
 
 		# get the new chore name
