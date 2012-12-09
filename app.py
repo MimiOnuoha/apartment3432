@@ -7,8 +7,8 @@ from flask import Flask, request, render_template, redirect, abort, jsonify
 import requests
 
 # import all of mongoengine
-# from mongoengine import *
-#from flask.ext.mongoengine import mongoengine
+from mongoengine import *
+from flask.ext.mongoengine import mongoengine
 
 
 # import data models
@@ -72,25 +72,20 @@ def chores():
 	roommates = models.Roommate.object()
 
 	# loop all roomies + increment chore number
-	for r in rommates:
+	for r in roomates:
 		#increment chorenumber
 
 		# get the new chore name
 		if r.chorenumber == len(choreList)-1:
-			r.chorenumber = 0   # choreList[0]  or  choreList[r.chorenumber]
+			r.chorenumber = 0   # choreList[0]  or  choreList[r.chorenumber] (write this!x)
 		else:
 			r.chorenumber += 1
 
 
 		# save r
-		# r.save()
+		r.save()
 
-		# send sms
-
-
-
-
-
+		# send sms (write the code for this)
 
 	# 
 
@@ -129,7 +124,7 @@ def twilio():
 		message = client.sms.messages.create(to=to_number, from_=from_telephone,
 	                                     body="Chore Reminder: " + sms_text)
 
-		return "message '%s' sent" % sms_text
+		return "message '%s' sent" % sms_text 
 
 
 
