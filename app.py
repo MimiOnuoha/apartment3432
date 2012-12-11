@@ -30,7 +30,7 @@ app.logger.debug("Connecting to MongoLabs")
 
 
 
-choreList = ['Kitchen','Bathroom', 'Floors','Misc']
+choreList = ['tidy up the kitchen','clean the bathroom', 'mop the floors','take out the trash']
 
 
 # --------- Routes ----------
@@ -47,30 +47,30 @@ def db():
 	
 
 	tmpRoomie = models.Roommate()
-	tmpRoomie.name = "mimi"
+	tmpRoomie.name = "Mimi"
 	tmpRoomie.chorenumber = 0
 	tmpRoomie.phonenumber = "12817340266"
 	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
 	tmpRoomie.save()
 
 	tmpRoomie = models.Roommate()
-	tmpRoomie.name = "roomietwo"
+	tmpRoomie.name = "Dani"
 	tmpRoomie.chorenumber = 1
-	tmpRoomie.phonenumber = "12345678900"
+	tmpRoomie.phonenumber = "12817340266"
 	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
 	tmpRoomie.save()
 
 	tmpRoomie = models.Roommate()
-	tmpRoomie.name = "roomiethree"
+	tmpRoomie.name = "Schuyler"
 	tmpRoomie.chorenumber = 2
-	tmpRoomie.phonenumber = "23456789011"
+	tmpRoomie.phonenumber = "12817340266"
 	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
 	tmpRoomie.save()
 
 	tmpRoomie = models.Roommate()
-	tmpRoomie.name = "roomiefour"
+	tmpRoomie.name = "Sara"
 	tmpRoomie.chorenumber = 3
-	tmpRoomie.phonenumber = "34567891234"
+	tmpRoomie.phonenumber = "12817340266"
 	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
 	tmpRoomie.save()
 
@@ -117,45 +117,42 @@ def twilio():
 
 	elif request.method == "POST":
 
-		telephone = request.form.get('telephone')
-		sms_text = request.form.get('sms_text')
-		person = request.form.get ('person_text')
-
-		# prepare telephone number. regex, only numbers
-		##telephone_num = re.sub("\D", "", telephone)
-		##if len(telephone_num) != 11:
-		##	return "Your target phone number must be 11 digits. Try again."
-		##else:
-		to_number = "+" + str(12817340266) #US country only now
-
-		
-		# trim message to 120
-		#if len(sms_text) > 120:
-		#	sms_text = sms_text[0:119]
-
-		account = os.environ.get('TWILIO_ACCOUNT_SID')
-		token = os.environ.get('TWILIO_AUTH_TOKEN')
-
-		client = TwilioRestClient(account, token)
-
-		from_telephone = os.environ.get('TWILIO_PHONE_NUMBER') # format +19171234567
-
-		message = client.sms.messages.create(to=to_number, from_=from_telephone,
-	                                     body="Chore Reminder: ")
-
+	
 
 		#return "message '%s' sent" % sms_text 
 		return render_template('twilio.html', **templateData)
 
 @app.route('/text/<roommate>')
-def text():
+def text(roommate):
+
+
+	r = models.Roommate.objects.get(name=roommate)
+
+
+
+	# prepare telephone number. regex, only numbers
+	##telephone_num = re.sub("\D", "", telephone)
+	##if len(telephone_num) != 11:
+	##	return "Your target phone number must be 11 digits. Try again."
+	##else:
+	to_number = "+" + str(12817340266) #US country only now
 
 	
+	# trim message to 120
+	#if len(sms_text) > 120:
+	#	sms_text = sms_text[0:119]
 
+	account = os.environ.get('TWILIO_ACCOUNT_SID')
+	token = os.environ.get('TWILIO_AUTH_TOKEN')
 
-#@app.route('/choresheet')
-#def choresheet_display():
+	client = TwilioRestClient(account, token)
 
+	from_telephone = os.environ.get('TWILIO_PHONE_NUMBER') # format +19171234567
+
+	message = client.sms.messages.create(to="+" + r.phonenumber, from_=from_telephone,
+                                     body="This week it is your turn to " + r.chore)
+
+	return redirect("/")
 
 
 

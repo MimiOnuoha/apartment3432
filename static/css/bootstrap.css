@@ -160,20 +160,20 @@ textarea {
 
 body {
   margin: 0;
-  font-family: "Playfair Dislay SC", sans-serif;
   font-size: 14px;
   line-height: 20px;
-  color: #333333;
+  color: #000000;
   background-color: #ffffff;
+  text-align: center;
 }
 
 a {
-  color: #0088cc;
+  color: #737373;
   text-decoration: none;
 }
 
 a:hover {
-  color: #005580;
+  color: #000000;
   text-decoration: underline;
 }
 

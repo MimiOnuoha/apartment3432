@@ -4,70 +4,31 @@
 {% block body %}
 
 
-<!--<h2>Twilio example, form to sms</h2>
-<form method="POST">
-	<label>Send a txt msg. Be nice.</label>
-	<br>
-	<label for="telephone">Enter a phone number</label>
-	<input type="tel" id="telephone" name="telephone"> (eg. 19174561234)<br>
-
-	<label for="sms_text">SMS Message</label>
-	<input type="text" id="sms_text" name="sms_text"><br>
-	<input type="submit" class="btn" value="send it">
-</form>-->
 
 
-<table border="0" cellpadding="15">
-<tr>
-	<td>
-		{% for r in roommates %}
-		<!-- <p> {{ r.name }}'s chore is {{ r.chore }} # is {{ r.chorenumber }}</p> --> 
+
+<div class="leaderboard">
+	<h1>	{% for r in roommates %}
 		
-<form method="POST">
-	<label for="sms_text">{{ r.name }}'s chore this week is to {{ r.chore }} </label>
-	<input type="submit" class="btn" value="Send her a reminder">
-	<br>
-</form>
-{% endfor %}
-</td>
-</tr>
+		
+		<form method="POST">
+			<div class = "leaderboard">
+				<h1><label for="sms_text">{{ r.name }}'s chore is to {{ r.chore }}. </label>
 
-<!--
-<tr>
-<td>
-<form method="POST">
-	<label for="sms_text">J's chore this week is to </label>
-	<input type="text" id="sms_text" name="sms_text">
-	<input type="submit" class="btn" value="Send her a reminder">
-	<br>
-</form>
-</td>
-</tr>
+				
+				<a class = "btn btn-success btn-large" href="/text/{{ r.name }}">Send a reminder </a>
+			</h1>
+			</p>
+		</form>
+		{% endfor %}
 
-<tr>
-<td>
-<form method="POST">
-	<label for="sms_text">C's chore this week is to </label>
-	<input type="text" id="sms_text" name="sms_text">
-	<input type="submit" class="btn" value="Send him a reminder">
-	<br>
-</form>
-</td>
-</tr>
+	</div>
 
-<tr>
-<td>
-<form method="POST">
-	<label for="sms_text">R's chore this week is to </label>
-	<input type="text" id="sms_text" name="sms_text">
-	<input type="submit" class="btn" value="Send him a reminder">
 	<br>
-</form>
-</td>
-<tr>
--->
-</table>
+</h1>
+	<h4><a href="/updatechores">Click to update chores</a></h4>
 
+</div> <!-- /container -->
 
 
 
@@ -75,19 +36,6 @@
 <hr>
 
 
-<h3 id="getting-twilio-account">THE CHORES</h3>
-
-<ul>
-<li>KITCHEN: 
-<li>BATHROOM: </li>
-<li>FLOORS: </li>
-<li>MISCELLANEOUS: </li>
-</ul>
-
-<a href="/updatechores">Update Chores!</a>
-
-
-<p> Include a chart here that shows the chores and what they entail </p>
 
 {% endblock %}
 
