@@ -12,7 +12,7 @@ from flask.ext.mongoengine import mongoengine
 
 
 # import data models
-#import models
+import models
 
 # Twilio
 from twilio.rest import TwilioRestClient
@@ -28,75 +28,92 @@ app.logger.debug("Connecting to MongoLabs")
 
 
 
-people = {"mimi": 12817340266, "roomietwo": 12345678900, 
-"roomiethree": 23456789011, "roomiefour": 34567891234}
+
 
 choreList = ['Kitchen','Bathroom', 'Floors','Misc']
 
 
 # --------- Routes ----------
-@app.route('/')
-def main():
-	return render_template('index.html')
+#@app.route('/')
+#def main():
+#	return render_template('index.html')
 
+
+## We just use this route to add the roomies into the database. 
 
 @app.route('/setupdb')
 def db():
 
-	#tmpRoomie=models.Roommate() 
+	
 
-	tmpRoomie = models.RoommateOne()
+	tmpRoomie = models.Roommate()
 	tmpRoomie.name = "mimi"
-	tmpRoomie.chorenumber = 1
+	tmpRoomie.chorenumber = 0
+	tmpRoomie.phonenumber = "12817340266"
+	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
 	tmpRoomie.save()
 
-	tmpRoomie = models.RoommateTwo()
+	tmpRoomie = models.Roommate()
 	tmpRoomie.name = "roomietwo"
-	tmpRoomie.chorenumber = 2
+	tmpRoomie.chorenumber = 1
+	tmpRoomie.phonenumber = "12345678900"
+	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
 	tmpRoomie.save()
 
-	tmpRoomie = models.RoommateThree()
+	tmpRoomie = models.Roommate()
 	tmpRoomie.name = "roomiethree"
-	tmpRoomie.chorenumber = 3
+	tmpRoomie.chorenumber = 2
+	tmpRoomie.phonenumber = "23456789011"
+	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
 	tmpRoomie.save()
 
-	tmpRoomie = models.RoommateFour()
+	tmpRoomie = models.Roommate()
 	tmpRoomie.name = "roomiefour"
-	tmpRoomie.chorenumber = 4
+	tmpRoomie.chorenumber = 3
+	tmpRoomie.phonenumber = "34567891234"
+	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
 	tmpRoomie.save()
 
-	return "create them"
+	return "Roommates created in database."
 
 @app.route('/updatechores')
 def chores():
 
 	# get all roomies
-	roommates = models.Roommate.object()
+	roommates = models.Roommate.objects()
 
 	# loop all roomies + increment chore number
-	for r in roommates:
-		#increment chorenumber
+	for r in roommates:		
 
 		# get the new chore name
 		if r.chorenumber == len(choreList)-1:
 			r.chorenumber = 0   # choreList[0]  or  choreList[r.chorenumber] (write this!x)
+
 		else:
 			r.chorenumber += 1
 
+		r.chore = choreList[r.chorenumber]
 
 		# save r
 		r.save()
+	return redirect('/')
 
 		# send sms (write the code for this)
 
-	# 
-
-
-@app.route('/twilio', methods=['GET','POST'])
-def twilio():
 	
+
+@app.route('/', methods=['GET','POST'])
+def twilio():
+
+	roommates = models.Roommate.objects()
+
+	templateData = {
+			'chores' : choreList,
+			'roommates' : roommates
+		}
+
 	if request.method == "GET":
-		return render_template('twilio.html')
+		return render_template('twilio.html', **templateData)
 
 	elif request.method == "POST":
 
@@ -113,8 +130,8 @@ def twilio():
 
 		
 		# trim message to 120
-		if len(sms_text) > 120:
-			sms_text = sms_text[0:119]
+		#if len(sms_text) > 120:
+		#	sms_text = sms_text[0:119]
 
 		account = os.environ.get('TWILIO_ACCOUNT_SID')
 		token = os.environ.get('TWILIO_AUTH_TOKEN')
@@ -124,9 +141,20 @@ def twilio():
 		from_telephone = os.environ.get('TWILIO_PHONE_NUMBER') # format +19171234567
 
 		message = client.sms.messages.create(to=to_number, from_=from_telephone,
-	                                     body="Chore Reminder: " + sms_text)
+	                                     body="Chore Reminder: ")
 
-		return "message '%s' sent" % sms_text 
+
+		#return "message '%s' sent" % sms_text 
+		return render_template('twilio.html', **templateData)
+
+@app.route('/text/<roommate>')
+def text():
+
+	
+
+
+#@app.route('/choresheet')
+#def choresheet_display():
 
 
 

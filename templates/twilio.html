@@ -20,15 +20,19 @@
 <table border="0" cellpadding="15">
 <tr>
 	<td>
+		{% for r in roommates %}
+		<!-- <p> {{ r.name }}'s chore is {{ r.chore }} # is {{ r.chorenumber }}</p> --> 
+		
 <form method="POST">
-	<label for="sms_text">Mimi's chore this week is to </label>
-	<input type="text" id="sms_text" name="sms_text">
+	<label for="sms_text">{{ r.name }}'s chore this week is to {{ r.chore }} </label>
 	<input type="submit" class="btn" value="Send her a reminder">
 	<br>
 </form>
+{% endfor %}
 </td>
 </tr>
 
+<!--
 <tr>
 <td>
 <form method="POST">
@@ -61,6 +65,7 @@
 </form>
 </td>
 <tr>
+-->
 </table>
 
 
@@ -78,6 +83,8 @@
 <li>FLOORS: </li>
 <li>MISCELLANEOUS: </li>
 </ul>
+
+<a href="/updatechores">Update Chores!</a>
 
 
 <p> Include a chart here that shows the chores and what they entail </p>
