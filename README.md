@@ -1,4 +1,4 @@
-## ITP DWD - Using Remote APIs
+## ITP DWD - Using Remote APIs and Making Sure Your House is Always Clean
 
 Download code. Open code directory in Terminal.
 
@@ -66,5 +66,61 @@ Now let's add the Twilio account variables to Heroku.
 	heroku config:add TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxx
 	heroku config:add TWILIO_PHONE_NUMBER=+XXXXXXXXX
 
+
+##Setting Up A Roommate Reminder System 
+
+In models.py, create a Roomate Class. We will use this to assign in an initial chore and chore number to 
+each roommate, and to also provide each roommate's name and phone number. 
+
+**In models.py**
+
+		name = StringField(required=True, verbose_name="name", unique=True)	
+		chorenumber = IntField (required=True, verbose_name="chorenumber")
+		phonenumber = StringField(max_length=120, required=True, verbose_name= "phonenumber")
+		chore = StringField(required=True)
+
+-----------------
+
+We will use this information in the /setupdb route, which will only be run once in order to
+hard code the roommates into the database. 
+
+**In app.py**
+
+		@app.route('/setupdb')
+def db():
+
+	
+
+	tmpRoomie = models.Roommate()
+	tmpRoomie.name = "Mimi"
+	tmpRoomie.chorenumber = 0
+	tmpRoomie.phonenumber = "12345678900"
+	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
+	tmpRoomie.save()
+
+	tmpRoomie = models.Roommate()
+	tmpRoomie.name = "Dani"
+	tmpRoomie.chorenumber = 1
+	tmpRoomie.phonenumber = "12345678900"
+	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
+	tmpRoomie.save()
+
+	tmpRoomie = models.Roommate()
+	tmpRoomie.name = "Schuyler"
+	tmpRoomie.chorenumber = 2
+	tmpRoomie.phonenumber = "12345678900"
+	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
+	tmpRoomie.save()
+
+	tmpRoomie = models.Roommate()
+	tmpRoomie.name = "Sara"
+	tmpRoomie.chorenumber = 3
+	tmpRoomie.phonenumber = "12345678900"
+	tmpRoomie.chore = choreList[tmpRoomie.chorenumber]
+	tmpRoomie.save()
+
+	return "Roommates created in database."
+	
+	
 
 
