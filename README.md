@@ -87,7 +87,7 @@ hard code the roommates into the database.
 **In app.py**
 
 		@app.route('/setupdb')
-def db():
+		def db():
 
 	
 
